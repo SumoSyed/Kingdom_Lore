@@ -107,17 +107,17 @@ def knightRecruit():
         elif choice == 3:
             playerKnights.append(knightRoster.pop(2))
         elif choice == 4:
-            playerKnights.append(knightRoster.pop(2))
+            playerKnights.append(knightRoster.pop(3))
         elif choice == 5:
-            playerKnights.append(knightRoster.pop(2))
+            playerKnights.append(knightRoster.pop(4))
         elif choice == 6:
-            playerKnights.append(knightRoster.pop(2))
+            playerKnights.append(knightRoster.pop(5))
         elif choice == 7:
-            playerKnights.append(knightRoster.pop(2))
+            playerKnights.append(knightRoster.pop(6))
         elif choice == 8:
-            playerKnights.append(knightRoster.pop(2))
+            playerKnights.append(knightRoster.pop(7))
         elif choice == 9:
-            playerKnights.append(knightRoster.pop(2))
+            playerKnights.append(knightRoster.pop(8))
 
         print("You now have a knight.")
         print(playerKnights)
