@@ -8,10 +8,8 @@ import random
 
 
 def clear():
-    if platform.system() == 'Linux':
-        os.system('clear')
-    elif platform.system() == 'Windows':
-        os.system('cls')
+    command = {"Linux": "clear", "Windows": "cls", "Darwin": "clear"}[platform.system()]
+    os.system(command)
 
 # Set our NPCs for knights/companions and other possible characters
 
@@ -31,26 +29,20 @@ class NPC:
         return f"Name: {self.name}; Charisma: {self.charisma}; Strength: {self.strength}; Exploration: {self.exploration}; Cost: {self.gold}"
 
 
-
     def recruit(self):
         if self.charisma <= 3:
             soldiers = random.randint(2, 4)
-            print("Amount of soldiers hired:__" + str(soldiers))
-            return soldiers
         elif self.charisma >= 4 or self.charisma <= 7:
             soldiers = random.randint(5, 9)
-            print("Amount of soldiers hired:__" + str(soldiers))
-            return soldiers
         elif self.charisma >= 8 or self.charisma <= 10:
             self.soldiers = random.randint(10, 14)
-            print("Amount of soldiers hired:__" + str(soldiers))
-            return soldiers
         elif self.charisma >= 10:
             soldiers = random.randint(15, 21)
-            print("Amount of soldiers hired:__" + str(soldiers))
-            return soldiers
+        print("Amount of soldiers hired:__" + str(soldiers))
+        return soldiers
         
 def menu():
+  while True:
     print(f"The year is {int(year)}.")
     print("1. Send one of your knights on a task.")
     print("2. Go to the village. |Not implemented|")
@@ -59,71 +51,56 @@ def menu():
     print("5. Recruit knights.")
     print("6. End turn.")
     value = userChoice()
+    clear()
     if value == 1:
-        clear()
         knightQuest()
     elif value == 5:
-        clear()
         knightRecruit()
     elif value == 6:
         yearEnd()
-        clear()
-        menu()
 
 def yearEnd():
     return    year + 1
 
 def knightQuest():
+  while True:
     if len(playerKnights) < 1:
         print("You have no knights. Recruit a knight first.")
-        input("Press enter to go back to the menu")
-        clear()
-        menu()
-    elif len(playerKnights) >= 1:
-        print("You have chosen to send your knights on a quest. Who would you like to send?")
-        print("Here is a list of your knights:")
-        print(*playerKnights, sep = "\n")
-        value = userChoice()
-        if value == 1:
-            print(f"You have chose to send {playerKnights[0]}")
-        elif value == 2:
-            print(f"You have chose to send {playerKnights[1]}")
-        elif value == 3:
-            print(f"You have chose to send {playerKnights[2]}")
-        else:
-            print("You have to pick a number between 1 and 3.")
-            print("Try again")
-            knightQuest()
+        continue
+
+    print("You have chosen to send your knights on a quest. Who would you like to send?")
+    print("Here is a list of your knights:")
+    print(*playerKnights, sep = "\n")
+    value = userChoice()
+
+    if(value < 1 and value > 3):
+      print("You have to pick a number between 1 and 3.")
+      print("Try again")
+      continue
+
+    print(f"You have chose to send {playerKnights[value -1]}")
+    # do quest
+    return
+        
 
 def knightRecruit():
+    if len(playerKnights) == 3:
+        f"You already have 3 knights"
+        return 
+      
     print("Here is a list of available knights. Remember, you can only have 3 knights")
     print(*[f"{i + 1}. {k}" for i,k in enumerate(knightRoster)], sep="\n")
-    if len(playerKnights) < 3:
-        choice = userChoice()            
-        if choice == 1:
-            playerKnights.append(knightRoster.pop(0))
-        elif choice == 2:
-            playerKnights.append(knightRoster.pop(1))
-        elif choice == 3:
-            playerKnights.append(knightRoster.pop(2))
-        elif choice == 4:
-            playerKnights.append(knightRoster.pop(3))
-        elif choice == 5:
-            playerKnights.append(knightRoster.pop(4))
-        elif choice == 6:
-            playerKnights.append(knightRoster.pop(5))
-        elif choice == 7:
-            playerKnights.append(knightRoster.pop(6))
-        elif choice == 8:
-            playerKnights.append(knightRoster.pop(7))
-        elif choice == 9:
-            playerKnights.append(knightRoster.pop(8))
-
-        print("You now have a knight.")
-        print(playerKnights)
-    elif len(playerKnights) == 3:
-        f"You already have 3 knights"
-    menu()
+    
+    choice = userChoice()     
+    
+    if(choice < 1 or choice > len(knightRoster)):
+      print(f"Choice must be between 1 and {len(knightRoster)}")
+      return
+    
+    playerKnights.append(knightRoster.pop(choice - 1))      
+    
+    print("You now have a knight.")
+    print(playerKnights)
 
 def userChoice():
     value = input("Choose: ")
