@@ -162,7 +162,7 @@ while True:
     value = userChoice()
     clear()
     if value == 1:
-        soldiers += knightQuest()
+        knightQuest()
     elif value == 5:
         knightRecruit()
     elif value == 6:
