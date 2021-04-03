@@ -12,11 +12,11 @@ Mark your name around the realm as you go on your own adventures
 
 ### IMPLEMENTED
 - Hiring knights
-- Sending knights on quests
+- Sending knights on quests to earn gold
 - Sending knights to recruit soldiers
 
 ### TO BE IMPLEMENETED
-- Quest events for the knights
+- Quest events for the knights #Cancelled. Knights now earn gold based on exploration skill)
 - Battle events for the knights
 - RPG elements
 - Kingdom management i.e construction/diplomacy
