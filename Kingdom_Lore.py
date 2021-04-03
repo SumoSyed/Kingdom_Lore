@@ -45,46 +45,71 @@ class NPC:
             soldiers = random.randint(10, 14)
         elif self.charisma >= 10:
             soldiers = random.randint(15, 21)
-        print(f"Amount of soldiers hired: {str(soldiers)}")
+
+        print(f"Your knight managed to recruit {str(soldiers)} soldiers.")
+        input("")
         return soldiers
+
+    def quests(self):
+        if self.exploration <= 3:
+            gold = random.randint(0, 50)
+        elif self.exploration >= 4 or self.charisma <= 7:
+            gold = random.randint(51, 100)
+        elif self.exploration >= 8 or self.charisma <= 10:
+            gold = random.randint(101, 200)
+        elif self.exploration >= 10:
+            gold = random.randint(201, 500)
+        if gold <= 50:
+            print(f"Your knight managed to completed a quest and earned {str(gold)} gold.")
+        elif gold >= 51 and gold <=100:
+            print(f"Your knight managed to complete a few quests and earned {str(gold)} gold.")
+        elif gold >= 101 and gold <= 200:
+            print(f"Your knight managed to complete various quests and earned {str(gold)} gold.")
+        elif gold >= 201:
+            print(f"Your knight managed to complete a long quests and earned {str(gold)} gold.")
+        input("")
+        return gold
+
 
 
 def knightQuest():
     while True:
         if len(playerKnights) < 1:
-            print("You have no knights. Recruit a knight first.")
-            print("")
-            input("Press enter to go back to the menu")
-            clear()
-            return
+            return 
         elif len(playerKnights) >= 1:
             print("You have chosen to send your knights on a quest. Who would you like to send?")
             print("Here is a list of your knights:")
-            print(*playerKnightStats, sep = "\n")
+            print(*[f"{i + 1}. {k}" for i,k in enumerate(playerKnightStats)], sep="\n")   
             value = userChoice()
             clear()
-            if value == 1 or value == 2 or value == 3:
-                selected_knight_stats = playerKnightStats[value - 1]
-                selected_knight = playerKnights[value - 1]
-                print(f"You have chosen to send {selected_knight_stats}")
-                print("What would you like to do with your knight?")
-                print("1. Send to recruit")
-                print("2. Send on a Quest") #Create events
-                print("3. Send to arena to battle")
-                value = userChoice()
-                if value == 1:
-                    return  soldiers + selected_knight.recruit() #Random number from the recruit method. 
-                elif value == 2:
-                    return 10 #Returns gold
-                elif value == 3:
-                    print("You chose to send to battle")
-                    return 
-                else:
-                    print("Your choice did not meet expectation.")
-                    return 
-            else:
-                print("You have to pick a number between 1 and 3.")
+            try:
+                if value == 1 or value == 2 or value == 3:
+                    selected_knight_stats = playerKnightStats[value - 1]
+                    selected_knight = playerKnights[value - 1]
+                    print(f"You have chosen to send {selected_knight_stats}")
+                    print("What would you like to do with your knight?")
+                    print("1. Send to recruit")
+                    print("2. Send on a quest")
+                    print("3. Send to arena to battle")
+                    value = userChoice()
+                    result =	{
+                        "soldiersRecruited": 0,
+                        "quests": 0,
+                        "battle": 0,
+                        }
+                    if value == 1:
+                        result["soldiersRecruited"] = selected_knight.recruit()
+                    elif value == 2:
+                        result["quests"] = selected_knight.quests()
+                    elif value == 3:
+                        result["battle"] = "You chose to send your knight to battle"
+                    else:
+                        print("Your choice did not meet expectation.")
+                    return result
+            except IndexError:
+                print(f"You do not have a knight at the {value} number.")
                 print("Try again")
+
 
 def knightRecruit():
     while True:
@@ -139,12 +164,13 @@ knightRoster = [npc_knight1, npc_knight2, npc_knight3, npc_knight4, npc_knight5,
 knightStats = [npc_knight1.displayStats(), npc_knight2.displayStats(), npc_knight3.displayStats(), npc_knight4.displayStats(), npc_knight5.displayStats(), npc_knight6.displayStats(), npc_knight7.displayStats(), npc_knight8.displayStats(), npc_knight9.displayStats()]
 
 #To hold the instances
-playerKnights = [npc_knight1]
+playerKnights = []
 #To call the method of the class NPC
-playerKnightStats = [npc_knight1.displayStats()]
+playerKnightStats = []
 
 year = 164
 soldiers = 0 #Basics implemented. Yet to define how soldiers work. 
+cost = 0
 population = 0 #Population system not implemented
 moral = 0 #Moral system playerKnightStatsnot implemented
 prosperity = 0 #Prosperity system not implemented
@@ -152,7 +178,7 @@ gold = 0 #Gold system not implemented
 
 while True:
     print(f"The year is {str(year)}.")
-    print(f"You have {str(soldiers)} soldiers at your disposal")
+    print(f"You have {str(soldiers)} soldiers at your disposal and {gold} gold. Your army costs {cost}.")
     print("1. Send one of your knights on a task.")
     print("2. Go to the village. |Not implemented|")
     print("3. Tend to your royal duties. |Not implemented|")
@@ -162,8 +188,16 @@ while True:
     value = userChoice()
     clear()
     if value == 1:
-        knightQuest()
+        result = knightQuest()
+        if result == None:
+            print("You have no knights. Recruit a knight first.")
+            print("")
+            continue
+        soldiers += result["soldiersRecruited"]
+        gold += result["quests"]
+        cost = soldiers * 5
     elif value == 5:
         knightRecruit()
     elif value == 6:
+        gold = gold - cost
         year += 1
