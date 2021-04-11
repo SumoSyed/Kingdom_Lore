@@ -52,23 +52,46 @@ class NPC:
 
     def quests(self):
         if self.exploration <= 3:
-            gold = random.randint(0, 50)
+            gold = random.randint(0, 100)
         elif self.exploration >= 4 or self.charisma <= 7:
-            gold = random.randint(51, 100)
+            gold = random.randint(0, 300)
         elif self.exploration >= 8 or self.charisma <= 10:
-            gold = random.randint(101, 200)
+            gold = random.randint(0, 500)
         elif self.exploration >= 10:
-            gold = random.randint(201, 500)
-        if gold <= 50:
+            gold = random.randint(0, 1000)
+        if gold <= 100:
             print(f"Your knight managed to completed a quest and earned {str(gold)} gold.")
-        elif gold >= 51 and gold <=100:
+        elif gold >= 50 and gold <= 300:
             print(f"Your knight managed to complete a few quests and earned {str(gold)} gold.")
-        elif gold >= 101 and gold <= 200:
+        elif gold >= 301 and gold <= 500:
             print(f"Your knight managed to complete various quests and earned {str(gold)} gold.")
-        elif gold >= 201:
+        elif gold >= 501:
             print(f"Your knight managed to complete a long quests and earned {str(gold)} gold.")
         input("")
         return gold
+
+    def battle(self):
+        bet = random.randint(0, 1)
+
+        if self.strength <= 3:
+            gold = random.randint(0, 25)
+        elif self.strength >= 4 or self.strength <= 7:
+            gold = random.randint(0, 100)
+        elif self.strength >= 8 or self.strength <= 10:
+            gold = random.randint(0, 500)
+        elif self.strength >= 10:
+            gold = random.randint(0, 1000)
+        
+        if bet == 0:
+            print(f"Your knight did not bet and won the duel. His duel earned him {gold} gold.")
+            return gold
+
+        elif bet == 1:
+            total_gold = gold * 2
+            print(f"Your knight chose to bet. The duel earned him {gold} gold while his clever bets earned him {total_gold - gold} gold with his total being {total_gold} gold")
+
+            return total_gold
+
 
 
 
@@ -102,7 +125,7 @@ def knightQuest():
                     elif value == 2:
                         result["quests"] = selected_knight.quests()
                     elif value == 3:
-                        result["battle"] = "You chose to send your knight to battle"
+                        result["battle"] = selected_knight.battle()
                     else:
                         print("Your choice did not meet expectation.")
                     return result
@@ -120,17 +143,27 @@ def knightRecruit():
         print(*[f"{i + 1}. {k}" for i,k in enumerate(knightStats)], sep="\n")
 
         if len(playerKnights) < 3:
-            choice = userChoice()          
-            if choice == 1 or choice == 2 or choice == 3 or choice == 4 or choice == 5 or choice == 6 or choice == 7 or choice == 8 or choice == 9:
-                playerKnights.append(knightRoster.pop(choice - 1))
-                playerKnightStats.append(knightStats.pop(choice - 1))
-            else:
-                print("You have to select the number shown on the left side of the knights name.")
+            try:
+                choice = userChoice()          
+                if choice == 1 or choice == 2 or choice == 3 or choice == 4 or choice == 5 or choice == 6 or choice == 7 or choice == 8 or choice == 9:
+                    playerKnights.append(knightRoster.pop(choice - 1))
+                    playerKnightStats.append(knightStats.pop(choice - 1))
+                else:
+                    print("You have to select the number shown on the left side of the knights name.")
+                    continue
+            except IndexError or ValueError:
+                print("Try again. Be sure to type the numbers shown besides the knight's name.")
+                input("")
+                continue
 
         print("You now have a knight.")
         print(*[f"{i + 1}. {k}" for i,k in enumerate(playerKnightStats)], sep="\n")
         print(" ")
         while True:
+            if len(playerKnights) == 3:
+                print(f"You have hired a total of 3 knights")
+                print("")
+                return
             value = input("Would you like to hire another knight? (yes/no): ").strip().lower()
             if value == "yes":
                 break
@@ -175,10 +208,11 @@ population = 0 #Population system not implemented
 moral = 0 #Moral system playerKnightStatsnot implemented
 prosperity = 0 #Prosperity system not implemented
 gold = 0 #Gold system not implemented
+game = True
 
-while True:
-    print(f"The year is {str(year)}.")
-    print(f"You have {str(soldiers)} soldiers at your disposal and {gold} gold. Your army costs {cost}.")
+while game:
+    print(f"The year is {year}.")
+    print(f"You have {soldiers} soldiers at your disposal and {gold} gold. Your army costs {cost}.")
     print("1. Send one of your knights on a task.")
     print("2. Go to the village. |Not implemented|")
     print("3. Tend to your royal duties. |Not implemented|")
@@ -195,9 +229,18 @@ while True:
             continue
         soldiers += result["soldiersRecruited"]
         gold += result["quests"]
+        gold += result["battle"]
         cost = soldiers * 5
+                
     elif value == 5:
         knightRecruit()
     elif value == 6:
         gold = gold - cost
         year += 1
+        if gold < 0:
+            game = False
+            input("You were unable to pay your way out of a revolt.")
+        elif soldiers < 0:
+            soldiers = 0
+        else:
+            continue
