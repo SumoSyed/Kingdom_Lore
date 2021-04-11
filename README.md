@@ -14,6 +14,7 @@ Mark your name around the realm as you go on your own adventures
 - Hiring knights
 - Sending knights on quests to earn gold
 - Sending knights to recruit soldiers
+- Have your knights duel and earn gold for you.
 
 ### TO BE IMPLEMENETED
 - Quest events for the knights #Cancelled. Knights now earn gold based on exploration skill)
