@@ -24,3 +24,5 @@ Mark your name around the realm as you go on your own adventures
 
 ### README
 Kingdom Lore is a planned strategy/RPG game inspired from the game by TaleWorlds, M&B, M&B: Warband and Bannerlord. The project is for me to work on my programming, especially touching on the OOP aspect using Python. The project is being done to help me continue to learn while also getting feedback from my peers.
+
+# Abdondoned Project
