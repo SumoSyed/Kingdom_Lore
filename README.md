@@ -1,4 +1,4 @@
-*** # Abdondoned Project ***
+***Abdondoned Project***
 
 ~~# Kingdom Lore~~ 
 
